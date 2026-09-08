@@ -1,0 +1,112 @@
+[protocol]
+name = "paired_random_2025_vs_2023_2025_nested_oof"
+analysis_role = "post_hoc_same_distribution_random_interpolation"
+targets = ["TN_out", "DEC"]
+outer_seeds = [11, 23, 37, 53, 71]
+outer_test_fraction = 0.20
+inner_folds = 3
+test_pool_start = "2025-01-04"
+test_pool_end = "2025-12-31"
+absolute_date_anchor = "2023-01-01"
+strict_2025_warmup = true
+target_history_used = false
+other_effluent_features_used = false
+future_prediction_claim_authorized = false
+independent_test = false
+test_period_previously_seen = true
+
+[input]
+initial_dataset = "../InitialData/initial_dataset.csv"
+
+[windows.Y2025]
+label = "2025_only"
+start = "2025-01-04"
+end = "2025-12-31"
+
+[windows.Y2023_2025]
+label = "2023_2025"
+start = "2023-01-04"
+end = "2025-12-31"
+exclude_dates = ["2025-01-01", "2025-01-02", "2025-01-03"]
+
+[features]
+version = "F_INITIAL_ABSOLUTE_TREND"
+TN_out_predictors = ["doy_sin", "doy_cos", "time_index_days", "Q", "COD", "TN_in", "NH3N", "T", "PPA", "DO", "MLSS"]
+DEC_predictors = ["doy_sin", "doy_cos", "time_index_days", "Q", "COD", "NH3N", "T", "PPA", "DO", "MLSS"]
+
+[models]
+base_pool = [
+  "ElasticNet",
+  "PLS",
+  "SVR",
+  "RandomForest",
+  "ExtraTrees",
+  "XGBoost",
+  "LightGBM",
+  "CatBoost",
+  "MLP",
+  "HistGradientBoosting",
+  "GradientBoosting",
+  "AdaBoost",
+  "KNN",
+  "GaussianProcess",
+  "TabNet",
+]
+baseline_pool = ["TrainingMean"]
+candidate_count = 4
+selection_metric = "pooled_inner_oof_RMSE"
+near_best_tolerance_fraction = 0.01
+near_best_tie_breaker = "pooled_inner_oof_MAE"
+
+[ensemble]
+eligible_base_models = [
+  "ElasticNet",
+  "PLS",
+  "SVR",
+  "RandomForest",
+  "ExtraTrees",
+  "XGBoost",
+  "LightGBM",
+  "CatBoost",
+  "MLP",
+  "HistGradientBoosting",
+  "GradientBoosting",
+  "AdaBoost",
+  "KNN",
+  "GaussianProcess",
+  "TabNet",
+]
+methods = ["MeanTopK", "Median", "NNLS", "Ridge", "Huber"]
+mean_top_k_candidates = [3, 5, 8, 12, 15]
+ridge_alphas = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+require_complete_inner_oof_for_all_base_models = true
+training_mean_enters_ensemble = false
+
+[tabnet]
+device_name = "cpu"
+max_epochs = 80
+patience = 10
+batch_size = 64
+virtual_batch_size = 16
+
+[[tabnet.candidates]]
+n_d = 8
+n_a = 8
+n_steps = 3
+gamma = 1.3
+lambda_sparse = 0.001
+
+[[tabnet.candidates]]
+n_d = 16
+n_a = 16
+n_steps = 4
+gamma = 1.5
+lambda_sparse = 0.0001
+
+[bootstrap]
+replicates = 10000
+seed = 20260822
+
+[output]
+root = "../results/reproduced/paired_random_windows"
+encoding = "utf-8-sig"

@@ -1,0 +1,28 @@
+[registry]
+schema_version = "formal_initial_dataset_feature_registry_v1"
+feature_version = "F_INITIAL_ABSOLUTE_TREND"
+field_namespace = "Paper/InitialData/initial_dataset.csv"
+targets = ["TN_out", "DEC"]
+target_history_used = false
+other_effluent_features_used = false
+availability_status = "materialized retrospective daily inputs; within-day timestamps pending plant confirmation"
+
+[targets.TN_out]
+predictors = ["doy_sin", "doy_cos", "time_index_days", "Q", "COD", "TN_in", "NH3N", "T", "PPA", "DO", "MLSS"]
+expected_dimension = 11
+
+[targets.DEC]
+predictors = ["doy_sin", "doy_cos", "time_index_days", "Q", "COD", "NH3N", "T", "PPA", "DO", "MLSS"]
+expected_dimension = 10
+
+# Historical result files remain immutable. These aliases document how their
+# legacy three-day-mean names map onto the materialized formal input columns.
+[historical_aliases]
+past3_mean_Q = "Q"
+past3_mean_COD = "COD"
+past3_mean_TN = "TN_in"
+past3_mean_NH3N = "NH3N"
+past3_mean_T = "T"
+past3_mean_PPA = "PPA"
+past3_mean_DO = "DO"
+past3_mean_MLSS = "MLSS"

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Fail closed when the source-only privacy check cannot run.
+task_root=$(git rev-parse --show-toplevel) || exit 1
+cd "$task_root" || exit 1
+for task_python in "$task_root/.venv-rl-gpu/python.exe" "$task_root/.venv/Scripts/python.exe" "$task_root/.venv/bin/python"; do
+    if [ -x "$task_python" ]; then
+        exec "$task_python" -B tools/check_repository_safety.py --staged
+    fi
+done
+for task_python in python3 python; do
+    if command -v "$task_python" >/dev/null 2>&1; then
+        exec "$task_python" -B tools/check_repository_safety.py --staged
+    fi
+done
+echo "Python is required to run the repository safety check." >&2
+exit 1

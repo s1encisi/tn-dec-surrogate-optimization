@@ -1,0 +1,99 @@
+[scope]
+name = "formal_TN_DEC_preference_conditioned_RL_rerun"
+analysis_role = "historical_support_domain_constrained_surrogate_simulation"
+targets = ["TN_out", "DEC"]
+proxy_simulation_only = true
+independent_plant_optimization_evidence = false
+plant_control_claim_authorized = false
+
+[inputs]
+initial_dataset = "../InitialData/initial_dataset.csv"
+proxy_run = "../results/final_project"
+formal_plant_gate_status = "../results/phase8_gate/status.json"
+
+[rl]
+algorithms = ["PPO", "SAC", "TD3"]
+training_seeds = [11, 23, 37, 53, 71]
+random_baseline_seeds = [11, 23, 37, 53, 71]
+preference_weights = [0.25, 0.50, 0.75]
+development_max_timesteps_per_algorithm_seed = 24000
+extension_max_timesteps_per_algorithm_seed = 32000
+checkpoint_frequency = 4000
+training_parallel_envs = 4
+episode_horizon_days = 7
+device = "cuda:0"
+cuda_allocator_memory_fraction = 0.40
+cuda_total_memory_abort_fraction = 0.85
+cuda_hard_memory_fraction = 0.90
+cuda_preflight_max_global_fraction = 0.70
+cuda_non_allocator_reserve_fraction = 0.08
+cuda_watchdog_interval_seconds = 0.50
+cuda_memory_check_interval_steps = 250
+policy_hidden_layers = [64, 64]
+train_start = "2023-01-04"
+train_end = "2024-12-31"
+validation_start = "2025-01-04"
+validation_end = "2025-06-30"
+test_start = "2025-07-01"
+test_end = "2025-12-31"
+evaluation_episode_stride_days = 7
+action_lower_quantile = 0.05
+action_upper_quantile = 0.95
+action_rate_quantile = 0.90
+objective_lower_quantile = 0.05
+objective_upper_quantile = 0.95
+support_neighbors = 10
+support_threshold_quantile = 0.95
+support_mode = "split_context_conditional_action_v2"
+context_excluded_features = ["doy_sin", "doy_cos", "time_index_days"]
+conditional_action_neighbors = 20
+conditional_action_lower_quantile = 0.10
+conditional_action_upper_quantile = 0.90
+abstain_on_context_ood = true
+support_penalty = 2.0
+repair_penalty = 0.05
+invalid_penalty = 10.0
+hypervolume_reference = [1.10, 1.10]
+
+[budget_gate]
+minimum_checkpoints = 6
+terminal_window_checkpoints = 3
+maximum_relative_hv_gain_terminal_window = 0.005
+maximum_seed_cv_at_selected_budget = 0.05
+rule = "at 24000 steps all algorithms stop only after a validation plateau; otherwise all extend to 32000 before the retrospective panel is opened"
+
+[algorithms.PPO]
+learning_rate = 0.0003
+n_steps_per_env = 250
+batch_size = 100
+n_epochs = 5
+gamma = 0.99
+gae_lambda = 0.95
+clip_range = 0.20
+
+[algorithms.SAC]
+learning_rate = 0.0003
+buffer_size = 50000
+learning_starts = 1000
+batch_size = 128
+gamma = 0.99
+tau = 0.005
+train_freq = 1
+gradient_steps = 1
+ent_coef = "auto"
+
+[algorithms.TD3]
+learning_rate = 0.001
+buffer_size = 50000
+learning_starts = 1000
+batch_size = 128
+gamma = 0.99
+tau = 0.005
+train_freq = 1
+gradient_steps = 1
+policy_delay = 2
+action_noise_sigma = 0.10
+
+[output]
+root = "../results/formal_rl_rerun"
+encoding = "utf-8-sig"

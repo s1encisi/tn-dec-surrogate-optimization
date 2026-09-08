@@ -1,0 +1,7 @@
+# Preserve the bytes of existing frozen source snapshots.
+* -text
+/.gitignore text eol=lf
+/.gitattributes text eol=lf
+/.githooks/* text eol=lf
+/.github/README.md text eol=lf
+/tools/check_repository_safety.py text eol=lf

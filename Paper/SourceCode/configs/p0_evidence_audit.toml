@@ -1,0 +1,102 @@
+[scope]
+name = "p0_evidence_boundary_audit"
+analysis_role = "post_hoc_temporal_and_proxy_uncertainty_sensitivity"
+independent_test = false
+future_prediction_claim_authorized = false
+plant_control_claim_authorized = false
+test_period_previously_seen = true
+
+[input]
+initial_dataset = "../InitialData/initial_dataset.csv"
+prediction_outer_predictions = "../results/prediction/final_outer_predictions.csv"
+formal_rl_failure_cases = "../results/formal_rl_rerun/development_32000_20260825T060915Z/test_once/test_failure_cases_vs_random_feasible.csv"
+
+[temporal]
+targets = ["TN_out", "DEC"]
+final_models = { TN_out = "Ensemble_Huber", DEC = "ExtraTrees" }
+feature_version = "F_INITIAL_ABSOLUTE_TREND"
+purge_days = 3
+inner_splits = 3
+inner_validation_rows = 60
+candidate_count = 4
+seed = 20260829
+
+[[temporal.outer_folds]]
+name = "H1_2024"
+train_end = "2023-12-31"
+test_start = "2024-01-01"
+test_end = "2024-06-30"
+
+[[temporal.outer_folds]]
+name = "H2_2024"
+train_end = "2024-06-30"
+test_start = "2024-07-01"
+test_end = "2024-12-31"
+
+[[temporal.outer_folds]]
+name = "H1_2025"
+train_end = "2024-12-31"
+test_start = "2025-01-04"
+test_end = "2025-06-30"
+
+[[temporal.outer_folds]]
+name = "H2_2025"
+train_end = "2025-06-30"
+test_start = "2025-07-01"
+test_end = "2025-12-31"
+
+[ensemble]
+eligible_base_models = [
+  "ElasticNet",
+  "PLS",
+  "SVR",
+  "RandomForest",
+  "ExtraTrees",
+  "XGBoost",
+  "LightGBM",
+  "CatBoost",
+  "MLP",
+  "HistGradientBoosting",
+  "GradientBoosting",
+  "AdaBoost",
+  "KNN",
+  "GaussianProcess",
+  "TabNet",
+]
+huber_epsilon = 1.35
+huber_alpha = 0.001
+
+[tabnet]
+device_name = "cpu"
+max_epochs = 80
+patience = 10
+batch_size = 64
+virtual_batch_size = 16
+
+[[tabnet.candidates]]
+n_d = 8
+n_a = 8
+n_steps = 3
+gamma = 1.3
+lambda_sparse = 0.001
+
+[[tabnet.candidates]]
+n_d = 16
+n_a = 16
+n_steps = 4
+gamma = 1.5
+lambda_sparse = 0.0001
+
+[uncertainty]
+training_window = "2023_2025"
+residual_aggregation = "median_prediction_by_unique_date"
+correlations = [0.0, 0.5, 0.9]
+primary_correlation = 0.5
+replicates = 20000
+seed = 20260829
+interval_level = 0.95
+calibrated_counterfactual_coverage_claim_authorized = false
+
+[output]
+root = "../results/p0_evidence"
+encoding = "utf-8-sig"

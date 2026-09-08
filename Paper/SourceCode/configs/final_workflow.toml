@@ -1,0 +1,86 @@
+[scope]
+name = "final_TN_DEC_proxy_xai_surrogate_rl"
+analysis_role = "historical_support_domain_constrained_surrogate_simulation"
+targets = ["TN_out", "DEC"]
+feature_version = "F_INITIAL_ABSOLUTE_TREND"
+training_window = "2023_2025"
+prediction_method = "random_ordinary_daily_80_20_five_overlapping_seeds"
+independent_test = false
+future_prediction_claim_authorized = false
+plant_control_claim_authorized = false
+
+[inputs]
+initial_dataset = "../InitialData/initial_dataset.csv"
+paired_config = "configs/paired_random_windows.toml"
+formal_rl_config = "configs/formal_rl_rerun.toml"
+parent_prediction_run = "../results/reproduction_inputs/paired_prediction"
+unified_comparison_run = "../results/reproduction_inputs/feature_representation"
+formal_plant_gate_status = "../results/phase8_gate/status.json"
+
+[final_models.DEC]
+model = "ExtraTrees"
+candidate_index = 0
+selection_basis = "lowest_mean_RMSE_within_frozen_initial_dataset_2023_2025"
+
+[final_models.TN_out]
+model = "Ensemble_Huber"
+component_count = 15
+meta_epsilon = 1.35
+meta_alpha = 0.001
+selection_basis = "lowest_mean_RMSE_within_frozen_initial_dataset_2023_2025"
+
+[refit]
+deployment_seed = 20260823
+inner_folds = 3
+n_jobs = -1
+registry_seed = 11
+
+[xai]
+random_seed = 20260823
+permutation_repeats = 20
+tn_shap_rows = 120
+tn_shap_background_rows = 48
+tn_shap_permutations = 3
+tn_shap_additivity_tolerance_mg_L = 0.0001
+ale_quantile_bins = 8
+ale_support_lower_quantile = 0.05
+ale_support_upper_quantile = 0.95
+ale_features = ["PPA", "DO", "MLSS"]
+
+[legacy_rl_non_manuscript]
+evidence_role = "legacy_non_manuscript_reproduction_only"
+manuscript_evidence_authorized = false
+superseded_by = "configs/formal_rl_rerun.toml"
+algorithms = ["PPO", "SAC", "TD3"]
+training_seeds = [11, 37, 71]
+preference_weights = [0.25, 0.50, 0.75]
+total_timesteps_per_algorithm_seed = 8000
+smoke_timesteps = 512
+training_parallel_envs = 4
+checkpoint_frequency = 4000
+checkpoint_selection = "validation_hypervolume"
+episode_horizon_days = 7
+device = "cpu"
+policy_hidden_layers = [64, 64]
+train_start = "2023-01-04"
+train_end = "2024-12-31"
+validation_start = "2025-01-04"
+validation_end = "2025-06-30"
+test_start = "2025-07-01"
+test_end = "2025-12-31"
+evaluation_episode_stride_days = 7
+action_lower_quantile = 0.05
+action_upper_quantile = 0.95
+action_rate_quantile = 0.90
+objective_lower_quantile = 0.05
+objective_upper_quantile = 0.95
+support_neighbors = 10
+support_threshold_quantile = 0.95
+support_penalty = 2.0
+repair_penalty = 0.05
+invalid_penalty = 10.0
+hypervolume_reference = [1.10, 1.10]
+
+[output]
+root = "../results/reproduced/final_project"
+encoding = "utf-8-sig"

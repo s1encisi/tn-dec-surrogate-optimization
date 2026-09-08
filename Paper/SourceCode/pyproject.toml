@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taici-sci-workflow"
+version = "0.1.0"
+description = "Leakage-safe wastewater prediction, explainability, and gated optimization workflow."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy>=1.26,<2.0",
+  "pandas>=2.3,<3.0",
+  "scipy>=1.16,<2.0",
+  "scikit-learn>=1.7,<2.0",
+  "statsmodels>=0.14,<1.0",
+  "openpyxl>=3.1,<4.0",
+  "matplotlib>=3.10,<4.0",
+  "xgboost>=3.0,<4.0",
+  "lightgbm>=4.6,<5.0",
+  "catboost>=1.2,<2.0",
+  "torch>=2.8,<3.0",
+  "shap>=0.47,<1.0",
+  "pymoo>=0.6,<1.0",
+  "gymnasium>=1.2,<2.0",
+  "stable-baselines3>=2.8,<3.0",
+  "numba>=0.62,<1.0",
+  "botorch>=0.18,<1.0",
+  "gpytorch>=1.15,<2.0",
+  "optuna>=4.6,<5.0",
+  "pytorch-tabnet>=4.1,<5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.11"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
