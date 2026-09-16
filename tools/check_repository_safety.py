@@ -13,7 +13,8 @@ SOURCE_SUFFIXES = {".py", ".toml", ".md"}
 PRIVATE_DIRECTORIES = {
     "data", "datasets", "initialdata", "results", "provenance", "submission",
     "delivery", "drafts", "figures", "plotting_data", "plotting_data_payload_v3",
-    "__pycache__", ".build_work", ".venv-rl-gpu",
+    "__pycache__", ".build_work", ".venv-rl-gpu", ".venv",
+    "legacy", "reviews", "upgrades", "evidence", "qa", "demo_outputs",
 }
 CONTENT_RULES = {
     "private key": rb"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----",
@@ -21,6 +22,7 @@ CONTENT_RULES = {
     "API credential": rb"(?:sk-(?:proj-)?[A-Za-z0-9_-]{24,}|AKIA[A-Z0-9]{16})",
     "literal secret": rb"""(?i)(?:api[_-]?key|access[_-]?token|password|secret)\s*[:=]\s*["'][A-Za-z0-9_+/=-]{20,}["']""",
     "credential in URL": rb"https?://[^\s/]+:[^\s/]+@",
+    "Git LFS pointer requiring separate review": rb"(?m)^version https://git-lfs.github.com/spec/v1$",
     "personal email": rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
     "personal filesystem path": rb"(?i)(?:[A-Z]:[\\/]+Users[\\/]+|/Users/|/home/)[A-Za-z0-9_.-]+",
 }

@@ -5,3 +5,11 @@
 /.githooks/* text eol=lf
 /.github/README.md text eol=lf
 /tools/check_repository_safety.py text eol=lf
+/README.md text eol=lf
+/INTERVIEW_QA.md text eol=lf
+/pyproject.toml text eol=lf
+/tn_dec_demo/*.py text eol=lf
+/tests/*.py text eol=lf
+/docs/*.md text eol=lf
+/tools/benchmark_demo.py text eol=lf
+/tools/summarize_demo.py text eol=lf

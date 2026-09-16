@@ -1,27 +1,31 @@
 # Source-only allowlist. New and unreviewed files stay local by default.
-# Keep private inputs, research documents, results, models and archives off GitHub.
+# Private data, models, manuscripts, evidence and Legacy material stay local.
 *
 
-# Reopen only the parents of reviewed files.
+# Parents of reviewed files.
 !/.githooks/
 !/.github/
 !/Paper/
+!/docs/
+!/tests/
+!/tn_dec_demo/
 !/tools/
-!/Paper/revision_20260905/
 !/Paper/SourceCode/
-!/Paper/revision_20260905/code/
+!/Paper/revision_20260905/
 !/Paper/SourceCode/configs/
 !/Paper/SourceCode/scripts/
 !/Paper/SourceCode/src/
 !/Paper/SourceCode/tests/
+!/Paper/revision_20260905/code/
 !/Paper/SourceCode/src/taici/
 
-# Reviewed files. Add exact paths only after a content review.
+# Exact reviewed paths.
 !/.gitattributes
 !/.githooks/pre-commit
 !/.githooks/pre-push
 !/.github/README.md
 !/.gitignore
+!/INTERVIEW_QA.md
 !/Paper/SourceCode/configs/feature_registry.toml
 !/Paper/SourceCode/configs/final_workflow.toml
 !/Paper/SourceCode/configs/formal_rl_rerun.toml
@@ -75,4 +79,16 @@
 !/Paper/revision_20260905/code/run_moo.py
 !/Paper/revision_20260905/code/test_context_moo.py
 !/Paper/revision_20260905/code/verify_experiment.py
+!/README.md
+!/docs/ARCHITECTURE.md
+!/docs/DEMO_RESULTS.md
+!/docs/REPRODUCIBILITY.md
+!/pyproject.toml
+!/tests/test_demo.py
+!/tn_dec_demo/__init__.py
+!/tn_dec_demo/__main__.py
+!/tn_dec_demo/report.py
+!/tn_dec_demo/workflow.py
+!/tools/benchmark_demo.py
 !/tools/check_repository_safety.py
+!/tools/summarize_demo.py

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tn-dec-research-demo"
+version = "0.1.0"
+description = "Reproducible synthetic demonstration of wastewater prediction and Pareto analysis."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy==1.26.4", "pandas==2.3.3", "scikit-learn==1.7.2",
+  "matplotlib==3.10.6", "pymoo==0.6.1.5"
+]
+
+[project.scripts]
+tn-dec-demo = "tn_dec_demo.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["tn_dec_demo*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
