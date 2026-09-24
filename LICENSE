@@ -1,0 +1,35 @@
+Copyright (c) 2026 s1encisi. All rights reserved.
+
+This repository and all of its contents — including source code, documentation,
+figures, tables, configuration and derived artifacts (the "Work") — are protected
+by copyright. No licence, express or implied, is granted to any party.
+
+Without the prior written permission of the copyright holder, you may not:
+
+1. copy, reproduce, distribute, publish, sublicense or sell the Work or any
+   substantial portion of it;
+2. modify, adapt, translate or create derivative works from the Work;
+3. use the Work, in whole or in part, for commercial purposes;
+4. use the Work to train, fine-tune or evaluate machine-learning models.
+
+The Work is made publicly viewable solely so that its methodology, code quality
+and reproducibility can be inspected and evaluated.
+
+Third-party components referenced or depended upon by the Work remain subject to
+their own licences. Refer to `pyproject.toml` for the pinned dependencies and to
+`Paper/Legacy/` for licences covering third-party research material.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE WORK
+OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+The synthetic demonstration generates all of its inputs from invented formulas.
+It contains no factory data, no anonymised copy of factory data and no claim of
+measured field performance. Any operational use requires independent engineering
+validation.
+
+For licensing enquiries, contact the copyright holder through the repository at
+https://github.com/s1encisi/tn-dec-surrogate-optimization

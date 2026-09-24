@@ -5,6 +5,7 @@
 # Parents of reviewed files.
 !/.githooks/
 !/.github/
+!/.github/workflows/
 !/Paper/
 !/docs/
 !/tests/
@@ -23,9 +24,11 @@
 !/.gitattributes
 !/.githooks/pre-commit
 !/.githooks/pre-push
-!/.github/README.md
+!/.github/workflows/ci.yml
 !/.gitignore
+!/CHANGELOG.md
 !/INTERVIEW_QA.md
+!/LICENSE
 !/Paper/SourceCode/configs/feature_registry.toml
 !/Paper/SourceCode/configs/final_workflow.toml
 !/Paper/SourceCode/configs/formal_rl_rerun.toml

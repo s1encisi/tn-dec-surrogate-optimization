@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint and test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package and development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Lint with Ruff
+        run: python -m ruff check .
+
+      - name: Check formatting with Ruff
+        run: python -m ruff format --check .
+
+      - name: Verify repository privacy allowlist
+        run: python -B tools/check_repository_safety.py --self-test
+
+      - name: Run test suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Run quick synthetic demonstration
+        run: python -m tn_dec_demo --quick --output demo_outputs/ci_quick
+
+      - name: Verify demonstration artifacts are hash-consistent
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from tn_dec_demo.workflow import sha
+
+          output = Path("demo_outputs/ci_quick")
+          manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
+          assert manifest["status"] == "COMPLETE", manifest["status"]
+          for name, digest in manifest["files"].items():
+              assert sha(output / name) == digest, f"hash mismatch: {name}"
+          print(f"verified {len(manifest['files'])} artifacts")
+          PY

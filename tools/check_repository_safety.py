@@ -1,26 +1,54 @@
 """Block unreviewed paths and sensitive content in staged files or pushed history."""
+
 from __future__ import annotations
 
 import argparse
-from pathlib import PurePosixPath
 import re
 import subprocess
 import sys
+from pathlib import PurePosixPath
 
 MAX_BYTES = 1024 * 1024
-SPECIAL_FILES = {".gitignore", ".gitattributes", ".githooks/pre-commit", ".githooks/pre-push"}
+SPECIAL_FILES = {
+    ".gitignore",
+    ".gitattributes",
+    ".githooks/pre-commit",
+    ".githooks/pre-push",
+    ".github/workflows/ci.yml",
+    "LICENSE",
+}
 SOURCE_SUFFIXES = {".py", ".toml", ".md"}
 PRIVATE_DIRECTORIES = {
-    "data", "datasets", "initialdata", "results", "provenance", "submission",
-    "delivery", "drafts", "figures", "plotting_data", "plotting_data_payload_v3",
-    "__pycache__", ".build_work", ".venv-rl-gpu", ".venv",
-    "legacy", "reviews", "upgrades", "evidence", "qa", "demo_outputs",
+    "data",
+    "datasets",
+    "initialdata",
+    "results",
+    "provenance",
+    "submission",
+    "delivery",
+    "drafts",
+    "figures",
+    "plotting_data",
+    "plotting_data_payload_v3",
+    "__pycache__",
+    ".build_work",
+    ".venv-rl-gpu",
+    ".venv",
+    "legacy",
+    "reviews",
+    "upgrades",
+    "evidence",
+    "qa",
+    "demo_outputs",
 }
 CONTENT_RULES = {
     "private key": rb"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----",
     "GitHub credential": rb"(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})",
     "API credential": rb"(?:sk-(?:proj-)?[A-Za-z0-9_-]{24,}|AKIA[A-Z0-9]{16})",
-    "literal secret": rb"""(?i)(?:api[_-]?key|access[_-]?token|password|secret)\s*[:=]\s*["'][A-Za-z0-9_+/=-]{20,}["']""",
+    "literal secret": (
+        rb"""(?i)(?:api[_-]?key|access[_-]?token|password|secret)"""
+        rb"""\s*[:=]\s*["'][A-Za-z0-9_+/=-]{20,}["']"""
+    ),
     "credential in URL": rb"https?://[^\s/]+:[^\s/]+@",
     "Git LFS pointer requiring separate review": rb"(?m)^version https://git-lfs.github.com/spec/v1$",
     "personal email": rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
@@ -146,6 +174,9 @@ def self_test() -> None:
     safe = "Paper/SourceCode/src/taici/metrics.py"
     approved = {safe, "measurements.csv", "Paper/results/summary.py"}
     assert path_problem(safe, approved) is None
+    assert path_problem("LICENSE", {"LICENSE"}) is None
+    assert path_problem(".github/workflows/ci.yml", {".github/workflows/ci.yml"}) is None
+    assert path_problem("unreviewed.yml", {"unreviewed.yml"})
     assert path_problem("new.py", approved)
     assert path_problem("measurements.csv", approved)
     assert path_problem("Paper/results/summary.py", approved)
@@ -204,4 +235,4 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except (RuntimeError, ValueError, UnicodeError) as exc:
         print("Repository safety check failed: " + str(exc), file=sys.stderr)
-        raise SystemExit(1)
+        raise SystemExit(1) from None

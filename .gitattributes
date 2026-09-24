@@ -3,7 +3,9 @@
 /.gitignore text eol=lf
 /.gitattributes text eol=lf
 /.githooks/* text eol=lf
-/.github/README.md text eol=lf
+/.github/workflows/*.yml text eol=lf
+/CHANGELOG.md text eol=lf
+/LICENSE text eol=lf
 /tools/check_repository_safety.py text eol=lf
 /README.md text eol=lf
 /INTERVIEW_QA.md text eol=lf

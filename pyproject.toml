@@ -5,15 +5,40 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tn-dec-research-demo"
 version = "0.1.0"
-description = "Reproducible synthetic demonstration of wastewater prediction and Pareto analysis."
+description = "Reproducible synthetic demonstration of wastewater TN/DEC prediction, model interpretation and support-constrained Pareto comparison."
+readme = "README.md"
 requires-python = ">=3.11,<3.13"
+license = { text = "All rights reserved. See LICENSE." }
+authors = [{ name = "s1encisi" }]
+keywords = [
+  "wastewater",
+  "surrogate-model",
+  "multi-objective-optimization",
+  "explainability",
+  "reproducibility",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
   "numpy==1.26.4", "pandas==2.3.3", "scikit-learn==1.7.2",
   "matplotlib==3.10.6", "pymoo==0.6.1.5"
 ]
 
+[project.optional-dependencies]
+dev = ["ruff==0.12.0"]
+
 [project.scripts]
 tn-dec-demo = "tn_dec_demo.__main__:main"
+
+[project.urls]
+Repository = "https://github.com/s1encisi/tn-dec-surrogate-optimization"
 
 [tool.setuptools.packages.find]
 include = ["tn_dec_demo*"]
@@ -24,3 +49,13 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+# ``Paper/`` holds frozen research snapshots verified by SHA-256 in
+# Paper/SourceCode/CODE_MANIFEST.csv. Reformatting them would break that evidence
+# chain, so linting and formatting are restricted to the public demonstration.
+extend-exclude = ["Paper", "demo_outputs", ".venv-rl-gpu"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
+# The reports and documentation are written in Chinese, so full-width punctuation is
+# intentional rather than an ambiguous-Unicode mistake.
+ignore = ["RUF001", "RUF002", "RUF003"]
